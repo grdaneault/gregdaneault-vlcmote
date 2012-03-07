@@ -32,6 +32,10 @@ public final class Status implements Serializable {
     private boolean mRandom;
     private boolean mLoop;
     private boolean mRepeat;
+    
+    private double mRate;
+    private double mAudioDelay;
+    private double mSubDelay;
 
     private final Track mTrack = new Track();
 
@@ -124,7 +128,39 @@ public final class Status implements Serializable {
     public void setRepeat(boolean repeat) {
         mRepeat = repeat;
     }
+    
+    
+    // New methods!! 
+    public void setRate(double rate)
+    {
+        mRate = rate;
+    }
+    
+    public void setAudioDelay(double delay)
+    {
+        mAudioDelay = delay;
+    }
 
+    public void setSubtitleDelay(double delay)
+    {
+        mSubDelay = delay;
+    }
+    
+    public double getRate()
+    {
+        return mRate;
+    }
+    
+    public double getAudioDelay()
+    {
+        return mAudioDelay;
+    }
+    
+    public double getSubtitleDelay()
+    {
+        return mSubDelay;
+    }
+    
     public Track getTrack() {
         return mTrack;
     }

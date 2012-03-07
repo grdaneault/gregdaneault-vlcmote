@@ -97,4 +97,15 @@
     
     <!-- Content description for hotkeys menu -->
     <string name="hotkeys">Hotkeys</string>
+    <string name="speed_control">Speed Control</string>
+    <string name="avsync_slower">Slower</string>
+    <string name="avsync_reset">Reset</string>
+    <string name="avsync_faster">Faster</string>
+    <string name="avsync_text">Value: </string>
+    <string name="avsync_rate">Playback Rate</string>
+    <string name="avsync_audiodelay">Audio Delay</string>
+    <string name="avsync_subtitledelay">Subtitle Delay</string>
+    <string name="avsync_increase">Increase</string>
+    <string name="avsync_decrease">Decrease</string>
+    <string name="supportedFiles">avi,mkv</string>
 </resources>

@@ -126,6 +126,29 @@ final class StatusContentHandler extends XmlContentHandler<Status> {
                 mStatus.setRepeat(repeat);
             }
         });
+        
+        // New Code!!
+        root.getChild("", "rate").setEndTextElementListener(new EndTextElementListener() {
+            /** {@inheritDoc} */
+            public void end(String body) {
+                double rate = Double.parseDouble(body);
+                mStatus.setRate(rate);
+            }
+        });
+        root.getChild("", "subtitledelay").setEndTextElementListener(new EndTextElementListener() {
+            /** {@inheritDoc} */
+            public void end(String body) {
+                double delay = Double.parseDouble(body);
+                mStatus.setSubtitleDelay(delay);
+            }
+        });
+        root.getChild("", "audiodelay").setEndTextElementListener(new EndTextElementListener() {
+            /** {@inheritDoc} */
+            public void end(String body) {
+                double delay = Double.parseDouble(body);
+                mStatus.setAudioDelay(delay);
+            }
+        });
         Element information = root.getChild("", "information");
         Element meta = information.getChild("", "meta-information");
         meta.getChild("", "title").setEndTextElementListener(new EndTextElementListener() {

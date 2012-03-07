@@ -17,13 +17,17 @@
 
 package org.peterbaldwin.vlcremote.net;
 
+import org.peterbaldwin.client.android.vlcremote.R;
 import org.peterbaldwin.vlcremote.model.Directory;
 import org.peterbaldwin.vlcremote.model.File;
 import org.xml.sax.Attributes;
 
+import android.content.Context;
 import android.sax.Element;
 import android.sax.RootElement;
 import android.sax.StartElementListener;
+import android.text.GetChars;
+import android.util.Log;
 
 import java.io.IOException;
 import java.net.URLConnection;
@@ -50,6 +54,7 @@ final class DirectoryContentHandler extends XmlContentHandler<Directory> {
             // appended by server with back-slash.
             path = path.replace('/', '\\');
         }
+        
         return new File(type, size, date, path, name, extension);
     }
 
@@ -62,10 +67,40 @@ final class DirectoryContentHandler extends XmlContentHandler<Directory> {
             /** {@inheritDoc} */
             public void start(Attributes attributes) {
                 File file = createFile(attributes);
-                directory.add(file);
+                
+                String mime = file.getMimeType();
+                String ext = file.getExtension();
+                if (mime == null && ext != null && !file.getType().equals("dir") )
+                {
+                    // Manual Override of know extensions
+                    if ("mkv".indexOf(ext) >= 0)
+                    {
+                        directory.add(file);
+                    }
+                }
+                else if (mime != null)
+                {
+                    if (mime.contains("audio") || mime.contains("video"))
+                    {
+                        directory.add(file);
+                    }
+                }
+                else if (file.isDirectory())
+                {
+                    String name = file.getName();
+                    if (!name.equals("Windows") && !name.contains("Program Files"))
+                    {
+                        directory.add(file);
+                    }
+                }
+                
+                
+                
+                
             }
         });
         parse(connection, root.getContentHandler());
+
         return directory;
     }
 }

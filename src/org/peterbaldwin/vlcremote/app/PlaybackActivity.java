@@ -19,6 +19,7 @@ package org.peterbaldwin.vlcremote.app;
 
 import org.peterbaldwin.client.android.vlcremote.R;
 import org.peterbaldwin.vlcremote.fragment.ArtFragment;
+import org.peterbaldwin.vlcremote.fragment.AudioVideoSyncFragment;
 import org.peterbaldwin.vlcremote.fragment.BrowseFragment;
 import org.peterbaldwin.vlcremote.fragment.ButtonsFragment;
 import org.peterbaldwin.vlcremote.fragment.HotkeyDialog;
@@ -36,9 +37,11 @@ import org.peterbaldwin.vlcremote.model.Status;
 import org.peterbaldwin.vlcremote.net.MediaServer;
 import org.peterbaldwin.vlcremote.widget.VolumePanel;
 
+import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.AudioManager;
@@ -52,6 +55,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -124,6 +128,8 @@ public class PlaybackActivity extends FragmentActivity implements TabHost.OnTabC
     private SlidingDrawer mDrawer;
 
     private ViewFlipper mFlipper;
+    
+    private AudioVideoSyncFragment mAVSync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +151,17 @@ public class PlaybackActivity extends FragmentActivity implements TabHost.OnTabC
         mServicesDiscovery = findFragmentById(R.id.fragment_services_discovery);
         mNavigation = findFragmentById(R.id.fragment_navigation);
 
+        android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+        android.app.Fragment prev = getFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        
+        mAVSync = new AudioVideoSyncFragment();
+        
+        
+        
         Context context = this;
         mVolumePanel = new VolumePanel(context);
 
@@ -231,7 +248,29 @@ public class PlaybackActivity extends FragmentActivity implements TabHost.OnTabC
     public void onHotkey(String keycode) {
         if ("toggle-fullscreen".equals(keycode)) {
             mMediaServer.status().command.fullscreen();
-        } else {
+        }
+        else if ("rate-increase".equals(keycode))
+        {
+            android.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
+
+            android.app.Fragment prev = getFragmentManager().findFragmentById(R.id.button_hotkeys);
+            
+            System.out.println("REMOVING");
+            if (prev != null) {
+                ft.remove(prev);
+            }
+            ft.addToBackStack(null);
+            
+            mAVSync = new AudioVideoSyncFragment();
+            mAVSync.setMediaServer(mMediaServer);
+            //mAVSync.show(ft, "dialog");
+            
+
+            
+            
+        } 
+        else
+        {
             mMediaServer.status().command.key(keycode);
         }
     }
@@ -334,6 +373,8 @@ public class PlaybackActivity extends FragmentActivity implements TabHost.OnTabC
         mPlayback.setMediaServer(mMediaServer);
         mButtons.setMediaServer(mMediaServer);
         mVolume.setMediaServer(mMediaServer);
+        mAVSync.setMediaServer(mMediaServer);
+        
         if (mArt != null) {
             mArt.setMediaServer(mMediaServer);
         }

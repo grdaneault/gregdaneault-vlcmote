@@ -22,6 +22,7 @@ import org.peterbaldwin.vlcremote.intent.Intents;
 import org.peterbaldwin.vlcremote.model.Status;
 import org.peterbaldwin.vlcremote.net.MediaServer;
 
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,12 +46,14 @@ public final class ButtonsFragment extends Fragment implements View.OnClickListe
 
     private ImageButton mButtonShuffle;
     private ImageButton mButtonRepeat;
+    private ImageButton mButtonFullscreen;
 
     private boolean mRandom;
     private boolean mRepeat;
     private boolean mLoop;
 
     private View mHotkeysButton;
+    private View mAVSyncButton;
 
     public void setMediaServer(MediaServer mediaServer) {
         mMediaServer = mediaServer;
@@ -66,13 +70,18 @@ public final class ButtonsFragment extends Fragment implements View.OnClickListe
 
         View view = getView();
 
-        mButtonShuffle = (ImageButton) view.findViewById(R.id.playlist_button_shuffle);
-        mButtonRepeat = (ImageButton) view.findViewById(R.id.playlist_button_repeat);
-        mHotkeysButton = view.findViewById(R.id.button_hotkeys);
+        mButtonShuffle    = (ImageButton) view.findViewById(R.id.playlist_button_shuffle);
+        mButtonRepeat     = (ImageButton) view.findViewById(R.id.playlist_button_repeat);
+        mButtonFullscreen = (ImageButton) view.findViewById(R.id.button_fullscreen);
+        mHotkeysButton    = view.findViewById(R.id.button_hotkeys);
+        mAVSyncButton     = view.findViewById(R.id.button_avsync);
+        
 
         mButtonShuffle.setOnClickListener(this);
         mButtonRepeat.setOnClickListener(this);
         mHotkeysButton.setOnClickListener(this);
+        mButtonFullscreen.setOnClickListener(this);
+        mAVSyncButton.setOnClickListener(this);
     }
 
     @Override
@@ -97,7 +106,18 @@ public final class ButtonsFragment extends Fragment implements View.OnClickListe
             case R.id.button_hotkeys:
                 DialogFragment dialog = new HotkeyDialog();
                 dialog.show(getFragmentManager(), DIALOG_HOTKEYS);
+                
                 break;
+            case R.id.button_fullscreen:
+                mMediaServer.status().command.fullscreen();
+                break;
+                
+            case R.id.button_avsync:
+                AudioVideoSyncFragment avsyncDialog = new AudioVideoSyncFragment();
+                avsyncDialog.setMediaServer(mMediaServer);
+                ((DialogFragment)avsyncDialog).show(getFragmentManager(), "dialog");
+                break;
+                
             case R.id.playlist_button_shuffle:
                 mMediaServer.status().command.playback.random();
                 mRandom = !mRandom;

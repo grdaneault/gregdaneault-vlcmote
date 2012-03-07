@@ -344,6 +344,28 @@ public final class MediaServer {
                 public void sd(String value) {
                     execute("command=pl_sd&val=" + value);
                 }
+                
+                public void rate(double value) {
+                    if (value > 0)
+                    {
+                        execute("command=rate&val=" + value);
+                    }
+                }
+                
+                public void audioDelay(double value)
+                {
+                    execute("command=audiodelay&val=" + value);
+                }
+                
+                
+                public void subtitleDelay(double value)
+                {
+                    execute("command=subdelay&val=" + value);
+                }
+                
+                
+                
+                
             }
 
             public void volume(int value) {
@@ -379,6 +401,26 @@ public final class MediaServer {
 
             public void snapshot() {
                 execute("command=snapshot");
+            }
+            
+            
+            // New Code!!
+            public void rate(double value) {
+                if (value > 0)
+                {
+                    execute("command=rate&val=" + value);
+                }
+            }
+            
+            public void audioDelay(double value)
+            {
+                execute("command=audiodelay&val=" + value);
+            }
+            
+            
+            public void subtitleDelay(double value)
+            {
+                execute("command=subdelay&val=" + value);
             }
         }
     }

@@ -14,7 +14,7 @@
         name="fragment_info" />
     <item
         type="id"
-        name="fragment_volume" />
+        name="fragment_volume" /><item type="id" name="fragment_audiovideosync" />
     <item
         type="id"
         name="fragment_playlist" />
@@ -39,4 +39,5 @@
     <item
         type="id"
         name="tab_navigation" />
+    
 </resources>

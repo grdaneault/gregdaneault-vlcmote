@@ -30,7 +30,7 @@ import android.widget.AdapterView;
 public final class HotkeyDialog extends DialogFragment implements AdapterView.OnItemClickListener {
 
     private String[] mCodes;
-    
+
     private HotkeyListener mHotkeyListener;
 
     @Override
