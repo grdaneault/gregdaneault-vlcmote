@@ -3,3 +3,5 @@ bin/
 classes/
 local.properties
 *~
+_netrc
+/fullscreen.psd
