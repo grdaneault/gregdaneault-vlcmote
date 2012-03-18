@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Remote for VLC</string>
+    <string name="app_name">VLCMote</string>
     <string name="description">Remote control for VideoLAN Client (VLC) media player.</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -107,5 +107,16 @@
     <string name="avsync_subtitledelay">Subtitle Delay</string>
     <string name="avsync_increase">Increase</string>
     <string name="avsync_decrease">Decrease</string>
-    <string name="supportedFiles">avi,mkv</string>
+    <string name="browse_category">File Browser Settings</string>
+    <string name="split_folders_files">Split the list into Folders and Files</string>
+    <string name="summary_split_folders_files">Show all the folders before listing any files</string>
+    <string name="filtering_enable">Enable File Filtering</string>
+    <string name="summary_filtering_enable">Hide files that can not be played in VLC</string>
+    <string name="filtering_directories">Enable Directory Filtering</string>
+    <string name="summary_filtering_directories">Hide sensitive directory from browsing</string>
+    <string name="filtering_directories_smart">Enable "Smart" Filtering</string>
+    <string name="summary_filtering_directories_smart">Hide folders with long, incomprehensible names</string>
+    <string name="filtering_extras">mkv</string>
+    <string name="filtering_special">Special File Formats</string>
+    <string name="summary_filtering_special">File formats to force to be shown when filtering is enabled</string>
 </resources>
