@@ -3,4 +3,9 @@ bin/
 classes/
 local.properties
 *~
+<<<<<<< HEAD
 _netrc
+=======
+_netrc
+/fullscreen.psd
+>>>>>>> af488b1b64b6cdee7c1b70607534b67219f2446e
