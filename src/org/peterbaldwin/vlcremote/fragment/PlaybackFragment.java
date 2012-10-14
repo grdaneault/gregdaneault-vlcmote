@@ -43,7 +43,7 @@ import android.widget.TextView;
 /**
  * Controls playback and displays progress.
  */
-public class PlaybackFragment extends Fragment implements View.OnClickListener,
+public class PlaybackFragment extends Fragment implements View.OnClickListener, View.OnLongClickListener, 
         OnSeekBarChangeListener {
 
     private BroadcastReceiver mStatusReceiver;
@@ -57,8 +57,12 @@ public class PlaybackFragment extends Fragment implements View.OnClickListener,
     private ImageButton mButtonPlaylistSkipBackward;
 
     private ImageButton mButtonPlaylistSeekForward;
+    private ImageButton mButtonPlaylistSeekForwardVertical;
 
     private ImageButton mButtonPlaylistSeekBackward;
+    private ImageButton mButtonPlaylistSeekBackwardVertical;
+    
+    private boolean showSeekButtons;
 
     private SeekBar mSeekPosition;
 
@@ -81,7 +85,19 @@ public class PlaybackFragment extends Fragment implements View.OnClickListener,
         mButtonPlaylistSkipBackward = setupImageButton(v, R.id.button_skip_backward);
         mButtonPlaylistSeekForward = setupImageButton(v, R.id.button_seek_forward);
         mButtonPlaylistSeekBackward = setupImageButton(v, R.id.button_seek_backward);
+        mButtonPlaylistSeekForwardVertical = setupImageButton(v, R.id.button_seek_forward_vert);
+        mButtonPlaylistSeekBackwardVertical = setupImageButton(v, R.id.button_seek_backward_vert);
 
+        showSeekButtons = false;
+        
+        if (mButtonPlaylistSeekBackwardVertical != null && mButtonPlaylistSeekForwardVertical != null)
+        {
+            mButtonPlaylistSeekBackwardVertical.setOnLongClickListener(this);
+            mButtonPlaylistSeekForwardVertical.setOnLongClickListener(this);
+            mButtonPlaylistSkipBackward.setOnLongClickListener(this);
+            mButtonPlaylistSkipForward.setOnLongClickListener(this);
+        }
+        
         mSeekPosition = (SeekBar) v.findViewById(R.id.seek_progress);
         mSeekPosition.setMax(100);
         mSeekPosition.setOnSeekBarChangeListener(this);
@@ -121,9 +137,9 @@ public class PlaybackFragment extends Fragment implements View.OnClickListener,
             playlist().previous();
         } else if (v == mButtonPlaylistSkipForward) {
             playlist().next();
-        } else if (v == mButtonPlaylistSeekBackward) {
+        } else if (v == mButtonPlaylistSeekBackward || v == mButtonPlaylistSeekBackwardVertical) {
             command().seek(Uri.encode("-10"));
-        } else if (v == mButtonPlaylistSeekForward) {
+        } else if (v == mButtonPlaylistSeekForward || v == mButtonPlaylistSeekForwardVertical) {
             command().seek(Uri.encode("+10"));
         }
     }
@@ -231,5 +247,29 @@ public class PlaybackFragment extends Fragment implements View.OnClickListener,
                 onStatusChanged(status);
             }
         }
+    }
+
+    public boolean onLongClick(View v) {
+        // TODO Auto-generated method stub
+        if (v == mButtonPlaylistSeekBackwardVertical || v == mButtonPlaylistSeekForwardVertical)
+        {
+            mButtonPlaylistSeekBackwardVertical.setVisibility(View.GONE);
+            mButtonPlaylistSeekForwardVertical.setVisibility(View.GONE);
+            mButtonPlaylistSkipBackward.setVisibility(View.VISIBLE);
+            mButtonPlaylistSkipForward.setVisibility(View.VISIBLE);
+            
+            return true;
+        }
+        else if (v == mButtonPlaylistSkipBackward || v == mButtonPlaylistSkipForward)
+        {
+            mButtonPlaylistSeekBackwardVertical.setVisibility(View.VISIBLE);
+            mButtonPlaylistSeekForwardVertical.setVisibility(View.VISIBLE);
+            mButtonPlaylistSkipBackward.setVisibility(View.GONE);
+            mButtonPlaylistSkipForward.setVisibility(View.GONE);
+            
+            return true;
+        }
+        
+        return false;
     }
 }

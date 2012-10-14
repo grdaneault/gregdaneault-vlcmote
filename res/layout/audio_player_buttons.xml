@@ -20,14 +20,14 @@
         style="@style/ToggleButton"
         android:minWidth="54dp"
         android:contentDescription="@string/toggle_fullscreen"
-        android:src="@drawable/ic_mp_more_btn" />
+        android:src="@drawable/ic_mp_fullscreen_btn" />
     
     <ImageButton
         android:id="@+id/button_avsync"
         style="@style/ToggleButton"
         android:minWidth="54dp"
         android:contentDescription="@string/hotkeys"
-        android:src="@drawable/ic_mp_more_btn" />
+        android:src="@drawable/ic_mp_menu_equalizer" />
     
     <ImageButton
         android:id="@+id/button_hotkeys"

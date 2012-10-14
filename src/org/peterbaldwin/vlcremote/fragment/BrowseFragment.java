@@ -190,7 +190,13 @@ public class BrowseFragment extends ListFragment implements
 
     private void showSetHomeToast() {
         Context context = getActivity();
-        CharSequence message = getString(R.string.sethome, getTitle());
+        CharSequence title = mPreferences.getHomeDirectory();
+        if (title.equals(""))
+        {
+            
+            title = "Drive Listing";
+        }
+        CharSequence message = getString(R.string.sethome, title);
         Toast toast = Toast.makeText(context, message, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.show();
@@ -239,7 +245,7 @@ public class BrowseFragment extends ListFragment implements
         Context context = getActivity();
         mPreferences.setBrowseDirectory(mDirectory);
         setEmptyText(getText(R.string.loading));
-        return new DirectoryLoader(context, mMediaServer, mDirectory);
+        return new DirectoryLoader(context, mMediaServer, mDirectory, mPreferences);
     }
 
     /** {@inheritDoc} */

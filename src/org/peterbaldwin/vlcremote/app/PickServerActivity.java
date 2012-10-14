@@ -18,6 +18,7 @@
 package org.peterbaldwin.vlcremote.app;
 
 import org.peterbaldwin.client.android.vlcremote.R;
+import org.peterbaldwin.vlcremote.model.Preferences;
 import org.peterbaldwin.vlcremote.preference.ProgressCategory;
 import org.peterbaldwin.vlcremote.receiver.PhoneStateChangedReceiver;
 import org.peterbaldwin.vlcremote.sweep.PortSweeper;
@@ -40,6 +41,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
@@ -81,6 +83,11 @@ public final class PickServerActivity extends PreferenceActivity implements Port
     private static final String KEY_SERVERS = "servers";
     private static final String KEY_ADD_SERVER = "add_server";
     private static final String KEY_PAUSE_FOR_CALL = "pause_for_call";
+    private static final String KEY_SPECIAL_FILE_EXTENSIONS = "special_file_extensions";
+    private static final String KEY_DIRECTORY_FILTER = "enable_filtering_directories";
+    private static final String KEY_DIRECTORY_FILTER_SMART = "enable_filtering_directories_smart";
+    private static final String KEY_FILE_FILTER = "enable_filtering";
+    private static final String KEY_SPLIT_FOLDERS_FILES = "split_folders_files";
 
     public static final String STATE_HOSTS = "hosts";
 
@@ -91,6 +98,9 @@ public final class PickServerActivity extends PreferenceActivity implements Port
     private static final int MENU_SCAN = Menu.FIRST;
 
     private static final int CONTEXT_FORGET = Menu.FIRST;
+
+
+
 
     private static byte[] toByteArray(int i) {
         int i4 = (i >> 24) & 0xFF;
@@ -120,6 +130,11 @@ public final class PickServerActivity extends PreferenceActivity implements Port
 
     private CheckBoxPreference mPreferenceWiFi;
     private CheckBoxPreference mPreferencePauseForCall;
+    private CheckBoxPreference mPreferenceSplitFoldersFiles;
+    private CheckBoxPreference mPreferenceFileFilter;
+    private CheckBoxPreference mPreferenceDirectoryFilter;
+    private CheckBoxPreference mPreferenceDirectoryFilterSmart;
+    private EditTextPreference mPreferenceSpecialFileExtensions;
     private ProgressCategory mProgressCategory;
     private Preference mPreferenceAddServer;
     
@@ -132,11 +147,22 @@ public final class PickServerActivity extends PreferenceActivity implements Port
 
         mPreferenceWiFi = (CheckBoxPreference) preferenceScreen.findPreference(KEY_WIFI);
         mPreferencePauseForCall = (CheckBoxPreference) preferenceScreen.findPreference(KEY_PAUSE_FOR_CALL);
+        mPreferenceSplitFoldersFiles = (CheckBoxPreference) preferenceScreen.findPreference(KEY_SPLIT_FOLDERS_FILES);
+        mPreferenceDirectoryFilter = (CheckBoxPreference) preferenceScreen.findPreference(KEY_DIRECTORY_FILTER);
+        mPreferenceDirectoryFilterSmart = (CheckBoxPreference) preferenceScreen.findPreference(KEY_DIRECTORY_FILTER_SMART);
+        mPreferenceFileFilter = (CheckBoxPreference) preferenceScreen.findPreference(KEY_FILE_FILTER);
+        mPreferenceSpecialFileExtensions = (EditTextPreference) preferenceScreen.findPreference(KEY_SPECIAL_FILE_EXTENSIONS);
         mProgressCategory = (ProgressCategory) preferenceScreen.findPreference(KEY_SERVERS);
         mPreferenceAddServer = preferenceScreen.findPreference(KEY_ADD_SERVER);
         
         mPreferencePauseForCall.setOnPreferenceChangeListener(this);
         mPreferencePauseForCall.setChecked(getPauseForCall());
+        
+        
+        // Disable filtering options if filtering isn't enabled
+        mPreferenceDirectoryFilter.setEnabled(mPreferenceFileFilter.isChecked());
+        mPreferenceDirectoryFilterSmart.setEnabled(mPreferenceDirectoryFilter.isChecked() && mPreferenceDirectoryFilter.isEnabled());
+        mPreferenceSpecialFileExtensions.setEnabled(mPreferenceFileFilter.isChecked());
 
         Intent intent = getIntent();
         mPort = intent.getIntExtra(EXTRA_PORT, 0);
@@ -403,6 +429,40 @@ public final class PickServerActivity extends PreferenceActivity implements Port
             return true;
         } else if (preference == mPreferencePauseForCall) {
             return super.onPreferenceTreeClick(preferenceScreen, preference);
+        } else if (preference == mPreferenceFileFilter) {
+            Preferences prefs = Preferences.get(this);
+            prefs.setFileFiltering(mPreferenceFileFilter.isChecked());
+            
+            mPreferenceDirectoryFilter.setEnabled(mPreferenceFileFilter.isChecked());
+            mPreferenceDirectoryFilterSmart.setEnabled(mPreferenceDirectoryFilter.isChecked() && mPreferenceDirectoryFilter.isEnabled());
+            mPreferenceSpecialFileExtensions.setEnabled(mPreferenceFileFilter.isChecked());
+                
+            return super.onPreferenceTreeClick(preferenceScreen, preference);
+        }
+        else if (preference == mPreferenceDirectoryFilter)
+        {
+            Preferences prefs = Preferences.get(this);
+            prefs.setDirectoryFiltering(mPreferenceDirectoryFilter.isChecked());
+            mPreferenceDirectoryFilterSmart.setEnabled(mPreferenceDirectoryFilter.isChecked() && mPreferenceDirectoryFilter.isEnabled());
+            return super.onPreferenceTreeClick(preferenceScreen, preference);
+        }
+        else if (preference == mPreferenceDirectoryFilterSmart)
+        {
+            Preferences prefs = Preferences.get(this);
+            prefs.setSmartDirectoryFiltering(mPreferenceDirectoryFilterSmart.isChecked());
+            return super.onPreferenceTreeClick(preferenceScreen, preference);
+        }
+        else if (preference == mPreferenceSplitFoldersFiles)
+        {
+            Preferences prefs = Preferences.get(this);
+            prefs.setSplitFoldersFiles(mPreferenceSplitFoldersFiles.isChecked());
+            return super.onPreferenceTreeClick(preferenceScreen, preference);
+        }
+        else if (preference == mPreferenceSpecialFileExtensions)
+        {
+            Preferences prefs = Preferences.get(this);
+            prefs.setExtraFileExtensions(mPreferenceSpecialFileExtensions.getText());
+            return super.onPreferenceTreeClick(preferenceScreen, preference);
         } else {
             String server = preference.getTitle().toString();
             pick(server);
@@ -543,7 +603,7 @@ public final class PickServerActivity extends PreferenceActivity implements Port
                 return false;
         }
     }
-
+    
     private void setPauseForCall(boolean enabled) {
         getPackageManager().setComponentEnabledSetting(
                 PHONE_STATE_RECEIVER,

@@ -17,6 +17,11 @@
         android:icon="@drawable/ic_menu_set_as"
         android:showAsAction="ifRoom|withText" />
     <item
+        android:id="@+id/menu_preferences"
+        android:title="@string/settings"
+        android:icon="@drawable/ic_menu_preferences"
+        android:showAsAction="ifRoom|withText" />
+    <item
         android:id="@+id/menu_refresh"
         android:title="@string/refresh"
         android:icon="@drawable/ic_menu_refresh"

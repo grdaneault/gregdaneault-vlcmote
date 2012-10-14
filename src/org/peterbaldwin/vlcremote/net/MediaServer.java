@@ -24,6 +24,7 @@ import org.apache.http.protocol.HTTP;
 import org.peterbaldwin.vlcremote.intent.Intents;
 import org.peterbaldwin.vlcremote.model.Directory;
 import org.peterbaldwin.vlcremote.model.Playlist;
+import org.peterbaldwin.vlcremote.model.Preferences;
 import org.peterbaldwin.vlcremote.model.Remote;
 import org.peterbaldwin.vlcremote.model.Status;
 import org.peterbaldwin.vlcremote.service.StatusService;
@@ -255,7 +256,7 @@ public final class MediaServer {
                     // Options are appended to the MRL
                     // for VLC 1.1.10 and earlier
                     for (String option : options) {
-                        input += " " + option;
+                        //input += " " + option;
                     }
                     String query = "command=in_play&input=" + Uri.encode(input);
 
@@ -442,8 +443,8 @@ public final class MediaServer {
             super(context, authority, "/requests/browse.xml?dir=" + Uri.encode(dir));
         }
 
-        public Remote<Directory> load() {
-            return load(new DirectoryContentHandler());
+        public Remote<Directory> load(Preferences prefs) {
+            return load(new DirectoryContentHandler(prefs));
         }
     }
 

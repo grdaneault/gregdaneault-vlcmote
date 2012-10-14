@@ -19,6 +19,8 @@ package org.peterbaldwin.vlcremote.model;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.peterbaldwin.client.android.vlcremote.R;
+import org.peterbaldwin.vlcremote.loader.DirectoryLoader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -43,6 +45,16 @@ public final class Preferences {
     private static final String PREFERENCE_HOME_DIRECTORY = "home_directory";
 
     private static final String PREFERENCE_RESUME_ON_IDLE = "resume_on_idle";
+
+    private static final String PREFERENCE_DIRECTORY_FILTERING = "enable_filtering_directories";
+
+    private static final String PREFERENCE_DIRECTORY_FILTERING_SMART = "enable_filtering_directories_smart";
+
+    private static final String PREFERENCE_FILE_FILTERING = "enable_filtering";
+
+    private static final String PREFERENCE_EXRTA_EXTENSIONS = "filtering_extra";
+
+    private static final String PREFERENCE_SPLIT_FOLDERS_FILES = "split_folders_files";
 
     private SharedPreferences mPreferences;
 
@@ -87,12 +99,38 @@ public final class Preferences {
     public String getBrowseDirectory() {
         return mPreferences.getString(PREFERENCE_BROWSE_DIRECTORY, "~");
     }
+    
+    public boolean getFileFiltering()
+    {
+        return mPreferences.getBoolean(PREFERENCE_FILE_FILTERING, true);
+    }
+
+    public boolean getDirectoryFiltering()
+    {
+        return mPreferences.getBoolean(PREFERENCE_DIRECTORY_FILTERING, true);
+    }
+    
+    public boolean getSplitFoldersFiles()
+    {
+        return mPreferences.getBoolean(PREFERENCE_SPLIT_FOLDERS_FILES, true);
+    }
+    
+    public boolean getSmartDirectoryFiltering()
+    {
+        return mPreferences.getBoolean(PREFERENCE_DIRECTORY_FILTERING_SMART, true);
+    }
+    
+    public String getExtraFileExtensions()
+    {
+        return mPreferences.getString(PREFERENCE_EXRTA_EXTENSIONS, "mkv");
+    }
 
     public boolean setAuthority(String authority) {
         return mPreferences.edit().putString(PREFERENCE_SERVER, authority).commit();
     }
 
     public boolean setHomeDirectory(String dir) {
+        dir = DirectoryLoader.simplifyDirectory(dir);
         return mPreferences.edit().putString(PREFERENCE_HOME_DIRECTORY, dir).commit();
     }
 
@@ -108,6 +146,38 @@ public final class Preferences {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(PREFERENCE_REMEMBERED_SERVERS, toJSONArray(rememberedServers));
         return editor.commit();
+    }
+    
+    public boolean setFileFiltering(boolean enabled)
+    {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putBoolean(PREFERENCE_FILE_FILTERING, enabled);
+        return editor.commit();
+    }
+    
+    public boolean setDirectoryFiltering(boolean enabled)
+    {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putBoolean(PREFERENCE_DIRECTORY_FILTERING, enabled);
+        return editor.commit();
+    }
+    
+    public boolean setSmartDirectoryFiltering(boolean enabled)
+    {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putBoolean(PREFERENCE_DIRECTORY_FILTERING_SMART, enabled);
+        return editor.commit();
+    }
+    
+    public boolean setSplitFoldersFiles(boolean enabled)
+    {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        editor.putBoolean(PREFERENCE_SPLIT_FOLDERS_FILES, enabled);
+        return editor.commit();
+    }
+    
+    public boolean setExtraFileExtensions(String extensions) {
+        return mPreferences.edit().putString(PREFERENCE_EXRTA_EXTENSIONS, extensions).commit();
     }
 
     private static String toJSONArray(List<String> list) {

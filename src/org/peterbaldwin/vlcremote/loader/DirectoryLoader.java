@@ -18,25 +18,54 @@
 package org.peterbaldwin.vlcremote.loader;
 
 import org.peterbaldwin.vlcremote.model.Directory;
+import org.peterbaldwin.vlcremote.model.Preferences;
 import org.peterbaldwin.vlcremote.model.Remote;
 import org.peterbaldwin.vlcremote.net.MediaServer;
 
 import android.content.Context;
+import android.util.Log;
+
+import java.util.regex.Pattern;
 
 public class DirectoryLoader extends ModelLoader<Remote<Directory>> {
 
     private final MediaServer mMediaServer;
 
+    private final Preferences mPreferences;
+    
     private final String mDir;
 
-    public DirectoryLoader(Context context, MediaServer mediaServer, String dir) {
+    public static String simplifyDirectory(String dir)
+    {
+        dir = dir.concat("\\");
+        String n = dir.replaceAll("([^\\\\\\.]*)(?:\\\\[^\\\\\\.]+\\\\\\.\\.\\\\)([^\\\\]*)", "$1\\\\$2");
+
+        while (!dir.equals(n))
+        {
+            dir = n;
+            n = dir.replaceAll("([^\\\\\\.]*)(?:\\\\[^\\\\\\.]+\\\\\\.\\.\\\\)([^\\\\]*)", "$1\\\\$2");
+        }
+    
+        return dir.substring(0,dir.length()-1);
+        
+    }
+    public DirectoryLoader(Context context, MediaServer mediaServer, String dir, Preferences prefs) {
         super(context);
         mMediaServer = mediaServer;
-        mDir = dir;
+        if (!dir.equals(""))
+        {
+            mDir = DirectoryLoader.simplifyDirectory(dir);
+        }
+        else
+        {
+            mDir = dir;
+        }
+        mPreferences = prefs;
+        
     }
 
     @Override
     public Remote<Directory> loadInBackground() {
-        return mMediaServer.browse(mDir).load();
+        return mMediaServer.browse(mDir).load(mPreferences);
     }
 }

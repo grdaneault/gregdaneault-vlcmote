@@ -49,6 +49,7 @@ public final class ButtonsFragment extends Fragment implements View.OnClickListe
     private ImageButton mButtonFullscreen;
 
     private boolean mRandom;
+    private boolean mFullscreen;
     private boolean mRepeat;
     private boolean mLoop;
 
@@ -110,6 +111,8 @@ public final class ButtonsFragment extends Fragment implements View.OnClickListe
                 break;
             case R.id.button_fullscreen:
                 mMediaServer.status().command.fullscreen();
+                mFullscreen = !mFullscreen;
+                updateButtons();
                 break;
                 
             case R.id.button_avsync:
@@ -165,6 +168,18 @@ public final class ButtonsFragment extends Fragment implements View.OnClickListe
         }
     }
     
+    private int getFullscreenResId()
+    {
+        if (mFullscreen)
+        {
+            return R.drawable.ic_mp_fullscreen_on_btn;
+        }
+        else
+        {
+            return R.drawable.ic_mp_fullscreen_btn;
+        }
+    }
+    
     private int getShuffleResId() {
         if (mRandom) {
             return R.drawable.ic_mp_shuffle_on_btn;
@@ -186,12 +201,14 @@ public final class ButtonsFragment extends Fragment implements View.OnClickListe
     private void updateButtons() {
         mButtonShuffle.setImageResource(getShuffleResId());
         mButtonRepeat.setImageResource(getRepeatResId());
+        mButtonFullscreen.setImageResource(getFullscreenResId());
     }
 
     void onStatusChanged(Status status) {
         mRandom = status.isRandom();
         mLoop = status.isLoop();
         mRepeat = status.isRepeat();
+        mFullscreen = status.isFullscreen();
         updateButtons();
     }
 

@@ -14,6 +14,26 @@
         android:summary="@string/summary_wifi_disconnected"
         android:title="@string/wifi" />
 
+	<PreferenceCategory android:title="@string/browse_category" >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="enable_filtering"
+            android:summary="@string/summary_filtering_enable"
+            android:title="@string/filtering_enable" android:enabled="true"/>
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="enable_filtering_directories"
+            android:summary="@string/summary_filtering_directories"
+            android:title="@string/filtering_directories" />
+
+        <CheckBoxPreference android:key="enable_filtering_directories_smart" android:summary="@string/summary_filtering_directories_smart" android:title="@string/filtering_directories_smart"/><EditTextPreference
+            android:defaultValue="@string/filtering_extras"
+            android:summary="@string/summary_filtering_special"
+            android:title="@string/filtering_special" android:key="special_file_extensions" android:persistent="true"/>
+        
+        <CheckBoxPreference android:key="split_folders_files" android:defaultValue="false" android:summary="@string/summary_split_folders_files" android:title="@string/split_folders_files"/>
+    </PreferenceCategory>
+    
     <org.peterbaldwin.vlcremote.preference.ProgressCategory
         android:key="servers"
         android:persistent="false"

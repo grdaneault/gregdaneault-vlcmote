@@ -255,7 +255,6 @@ public class PlaybackActivity extends FragmentActivity implements TabHost.OnTabC
 
             android.app.Fragment prev = getFragmentManager().findFragmentById(R.id.button_hotkeys);
             
-            System.out.println("REMOVING");
             if (prev != null) {
                 ft.remove(prev);
             }

@@ -92,9 +92,6 @@ public final class AudioVideoSyncFragment extends DialogFragment implements View
         
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.audiovideosync_fragment, null);
         
-        System.out.println(R.id.rate_increase);
-        System.out.println(R.id.audiodelay_text_container);
-        System.out.println(R.id.subtitledelay_text_container);
         mRateSlower = (Button) view.findViewById(R.id.rate_decrease);
         mRateReset = (Button) view.findViewById(R.id.rate_reset);
         mRateFaster = (Button) view.findViewById(R.id.rate_increase);
@@ -133,8 +130,13 @@ public final class AudioVideoSyncFragment extends DialogFragment implements View
         mAudioDelayReset.setOnClickListener(this);
         mAudioDelayFaster.setOnClickListener(this);
         
+        currentRate = 1;
         currentAudioDelay = 0;
         currentSubtitleDelay = 0;
+        
+        mRateText.setText("" + currentRate);
+        mAudioDelayText.setText("" + currentAudioDelay);
+        mSubtitleDelayText.setText("" + currentSubtitleDelay);
         
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Audio and Visual Sync");

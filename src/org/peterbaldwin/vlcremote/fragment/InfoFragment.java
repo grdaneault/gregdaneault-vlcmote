@@ -27,6 +27,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,13 @@ public class InfoFragment extends Fragment {
     void onStatusChanged(Status status) {
         setText(mArtist, status.getTrack().getArtist());
         setText(mAlbum, status.getTrack().getAlbum());
-        setText(mTrack, status.getTrack().getTitle());
+        String title =  status.getTrack().getTitle();
+        if (title == null)
+        {
+            title = status.getTrack().getName();
+        }
+                
+        setText(mTrack, title);
     }
 
     private static void setText(TextView textView, String value) {
